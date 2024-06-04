@@ -4,7 +4,20 @@ $replaceAfter = "-"
 $files = Get-ChildItem -Path $folderPath -File
 $pattern = "^(.*)_(\d+?)_(\d+?)_(.*)$"
 
+# Function to check for F12 key press
+function Check-EmergencyStop {
+    if ([console]::KeyAvailable) {
+        $key = [console]::ReadKey($true).Key
+        if ($key -eq 'F12') {
+            Write-Host "Emergency stop triggered. Exiting script."
+            exit
+        }
+    }
+}
+
 foreach ($file in $files) {
+    Check-EmergencyStop
+    
     if ($file.Name -match $pattern) {
         $prefix = $matches[1]
         $firstNumber = $matches[2]
