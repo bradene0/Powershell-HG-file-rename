@@ -2,30 +2,16 @@ $folderPath = "C:\Path\To\Your\Files"
 $replaceBefore = "-"
 $replaceAfter = "-"
 $files = Get-ChildItem -Path $folderPath -File
-$pattern = "^(.*?)_([\d]+?)_(.*?)$"
-
-function Check-EmergencyStop {
-    if ([console]::KeyAvailable) {
-        $key = [console]::ReadKey($true).Key
-        if ($key -eq 'F12') {
-            Write-Host "Emergency stop triggered. Exiting script."
-            exit
-        }
-    }
-}
+$pattern = "^(.*?)_(\d+)_([\w\s]+)$"
 
 foreach ($file in $files) {
-    Check-EmergencyStop
-
     if ($file.Name -match $pattern) {
-        $parts = $matches[1..3]
+        $prefix = $matches[1]
+        $firstNumber = $matches[2]
+        $suffix = $matches[3]
 
-        # Replace only the underscores around the first number
-        $parts[1] = $parts[1] -replace '_', $replaceBefore
-        $parts[2] = $parts[2] -replace '_', $replaceAfter
-
-        # Join the parts back together to form the new filename
-        $newName = $parts -join '_'
+        # Construct the new filename preserving all underscores
+        $newName = "$prefix$replaceBefore$firstNumber$replaceAfter$suffix"
         $newPath = Join-Path -Path $file.DirectoryName -ChildPath $newName
         
         # Rename the file
