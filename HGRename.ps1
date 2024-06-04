@@ -1,8 +1,6 @@
 $folderPath = "C:\Path\To\Your\Files"
-$replaceBefore = "-"
-$replaceAfter = "-"
 $files = Get-ChildItem -Path $folderPath -File
-$pattern = "^(.*?)_(\d+)_([\w\s]+)$"
+$pattern = "^(.*?)_([\d]+)_([\w\s]+)$"
 
 foreach ($file in $files) {
     if ($file.Name -match $pattern) {
@@ -10,8 +8,11 @@ foreach ($file in $files) {
         $firstNumber = $matches[2]
         $suffix = $matches[3]
 
-        # Construct the new filename preserving all underscores
-        $newName = "$prefix$replaceBefore$firstNumber$replaceAfter$suffix"
+        # Replace underscores around the first number with hyphens
+        $newSuffix = $suffix -replace "_", "-"
+
+        # Construct the new filename
+        $newName = "$prefix-$firstNumber-$newSuffix"
         $newPath = Join-Path -Path $file.DirectoryName -ChildPath $newName
         
         # Rename the file
