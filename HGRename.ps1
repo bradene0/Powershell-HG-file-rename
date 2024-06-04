@@ -23,14 +23,14 @@ foreach ($file in $files) {
         $afterNumber = $matches[3]
 
         # Replace underscores only before and after the first number
-        $beforeNumber = $beforeNumber -replace '_(?=.*?_)', $replaceBefore
-        $afterNumber = $afterNumber -replace '_(?=.*?_)', $replaceAfter
+        $beforeNumber = $beforeNumber -replace '_', $replaceBefore
+        $afterNumber = $afterNumber -replace '_', $replaceAfter
 
         # Join the parts back together to form the new filename
         $newName = $beforeNumber + "_" + $firstNumber + "_" + $afterNumber
-        $newPath = Join-Path -Path $file.DirectoryName -ChildPath $newName
-        
+
         # Rename the file
+        $newPath = Join-Path -Path $file.DirectoryName -ChildPath $newName
         Rename-Item -Path $file.FullName -NewName $newName
     }
 }
