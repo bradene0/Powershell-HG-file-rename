@@ -23,7 +23,9 @@ foreach ($file in $files) {
         $firstNumber = $matches[2]
         $secondNumber = $matches[3]
         $suffix = $matches[4]
-        $newName = "$prefix$replaceBefore$firstNumber$replaceAfter$secondNumber$replaceAfter$suffix"
+
+        # Include underscore between the two numbers
+        $newName = "$prefix$replaceBefore$firstNumber`_$secondNumber$replaceAfter$suffix"
         $newPath = Join-Path -Path $file.DirectoryName -ChildPath $newName
         Rename-Item -Path $file.FullName -NewName $newName
     }
