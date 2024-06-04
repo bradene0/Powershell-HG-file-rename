@@ -18,19 +18,17 @@ foreach ($file in $files) {
     Check-EmergencyStop
 
     if ($file.Name -match $pattern) {
-        $beforeNumber = $matches[1]
-        $firstNumber = $matches[2]
-        $afterNumber = $matches[3]
+        $parts = $matches[1..3]
 
-        # Replace underscores only before and after the first number
-        $beforeNumber = $beforeNumber -replace '_', $replaceBefore
-        $afterNumber = $afterNumber -replace '_', $replaceAfter
+        # Replace only the underscores around the first number
+        $parts[1] = $parts[1] -replace '_', $replaceBefore
+        $parts[2] = $parts[2] -replace '_', $replaceAfter
 
         # Join the parts back together to form the new filename
-        $newName = $beforeNumber + "_" + $firstNumber + "_" + $afterNumber
-
-        # Rename the file
+        $newName = $parts -join '_'
         $newPath = Join-Path -Path $file.DirectoryName -ChildPath $newName
+        
+        # Rename the file
         Rename-Item -Path $file.FullName -NewName $newName
     }
 }
