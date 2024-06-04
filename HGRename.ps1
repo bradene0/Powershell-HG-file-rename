@@ -19,13 +19,19 @@ foreach ($file in $files) {
 
     if ($file.Name -match $pattern) {
         $parts = $matches[1..3]
+
+        # Find the index of the first number
         $firstNumberIndex = $file.Name.IndexOfAny([char[]]"0123456789")
-        $beforeNumber = $file.Name.Substring(0, $firstNumberIndex)
-        $afterNumber = $file.Name.Substring($firstNumberIndex)
-        $beforeNumber = $beforeNumber -replace '_', $replaceBefore
-        $afterNumber = $afterNumber -replace '_', $replaceAfter
-        $newName = $beforeNumber + $afterNumber
+
+        # Replace underscores only before and after the first number
+        $parts[0] = $parts[0] -replace '_', $replaceBefore
+        $parts[1] = $parts[1] -replace '_', $replaceAfter
+
+        # Join the parts back together to form the new filename
+        $newName = $parts -join '_'
         $newPath = Join-Path -Path $file.DirectoryName -ChildPath $newName
+        
+        # Rename the file
         Rename-Item -Path $file.FullName -NewName $newName
     }
 }
