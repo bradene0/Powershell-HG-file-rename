@@ -2,9 +2,8 @@ $folderPath = "C:\Path\To\Your\Files"
 $replaceBefore = "-"
 $replaceAfter = "-"
 $files = Get-ChildItem -Path $folderPath -File
-$pattern = "^(.*)_(\d+?)_(\d+?)_(.*)$"
+$pattern = "^(.*)_(\d+?)_(.*)$"
 
-# Function to check for F12 key press
 function Check-EmergencyStop {
     if ([console]::KeyAvailable) {
         $key = [console]::ReadKey($true).Key
@@ -17,13 +16,12 @@ function Check-EmergencyStop {
 
 foreach ($file in $files) {
     Check-EmergencyStop
-    
+
     if ($file.Name -match $pattern) {
         $prefix = $matches[1]
         $firstNumber = $matches[2]
-        $secondNumber = $matches[3]
-        $suffix = $matches[4]
-        $newName = "$prefix$replaceBefore$firstNumber$replaceAfter$secondNumber$replaceAfter$suffix"
+        $suffix = $matches[3]
+        $newName = "$prefix$replaceBefore$firstNumber$replaceAfter$suffix"
         $newPath = Join-Path -Path $file.DirectoryName -ChildPath $newName
         Rename-Item -Path $file.FullName -NewName $newName
     }
